@@ -2,10 +2,12 @@ package swp.studentprojectportal.controller.admin;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import swp.studentprojectportal.model.Setting;
 import swp.studentprojectportal.service.servicesimpl.SettingService;
 
@@ -16,13 +18,20 @@ public class SettingController {
     @Autowired
     SettingService settingService;
     @GetMapping("/admin/setting")
-    public String settingPage(Model model) {
-        List<Setting> roleList = settingService.findSettingByTypeIdOrderByDisplayOrder(1);
-        List<Setting> semesterList = settingService.findSettingByTypeIdOrderByDisplayOrder(3);
-        List<Setting> emailDomainList = settingService.findSettingByTypeIdOrderByDisplayOrder(2);
-        model.addAttribute("roleList", roleList);
-        model.addAttribute("semesterList", semesterList);
-        model.addAttribute("emailDomainList", emailDomainList);
+    public String settingPage(@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize,
+                @RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "-1") Integer typeId,
+                @RequestParam(defaultValue = "-1") Integer status, @RequestParam(defaultValue = "id") String sortBy,
+                @RequestParam(defaultValue = "1") Integer sortType, Model model) {
+        Page<Setting> settingList = settingService.filter(search, pageNo, pageSize, sortBy, sortType, typeId, status);
+        model.addAttribute("settingList", settingList);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageNo", pageNo);
+        model.addAttribute("search", search);
+        model.addAttribute("typeId", typeId);
+        model.addAttribute("status", status);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortType", sortType);
+        model.addAttribute("totalPage", settingList.getTotalPages());
         return "admin/setting/settingList";
     }
 
@@ -38,7 +47,7 @@ public class SettingController {
     @PostMapping("/admin/setting/update")
     public String updateSetting(
             @RequestParam Integer typeId, @RequestParam String settingTitle,
-            @RequestParam Integer displayOrder, WebRequest request, Model model) {
+            @RequestParam Integer displayOrder, @RequestParam String description, WebRequest request, Model model, RedirectAttributes attributes) {
         String status = request.getParameter("status");
         Setting setting = new Setting();
         String id = request.getParameter("id");
@@ -46,6 +55,7 @@ public class SettingController {
         setting.setTypeId(typeId);
         String typeName=settingService.setTypeName(typeId);
         setting.setSettingTitle(settingTitle);
+        setting.setDescription(description);
         setting.setDisplayOrder(displayOrder);
         setting.setStatus(status!=null);
         model.addAttribute("setting", setting);
@@ -56,11 +66,12 @@ public class SettingController {
             model.addAttribute("errmsg", "Display Order has already existed!");
         }
         else {
+            attributes.addFlashAttribute("toastMessage", "Update setting details successfully");
             if(id==null || id.isEmpty()){
-                model.addAttribute("setting", new Setting());
+                attributes.addFlashAttribute("toastMessage", "Add new setting successfully");
             }
             settingService.saveSetting(setting);
-            model.addAttribute("msg", "Successfully");
+            return "redirect:/admin/setting";
         }
         model.addAttribute("typeId", typeId);
         model.addAttribute("typeName", typeName);
@@ -68,14 +79,9 @@ public class SettingController {
     }
 
     @GetMapping("/admin/setting/add")
-    public String settingAddForm(@RequestParam("typeId") Integer typeId, Model model) {
-        int displayOrder = settingService.findLastDisplayOrder(typeId).getDisplayOrder();
+    public String settingAddForm(Model model) {
         Setting setting = new Setting();
-        String typeName=settingService.setTypeName(typeId);
-        model.addAttribute("typeId", typeId);
-        model.addAttribute("displayOrder", displayOrder+1);
         model.addAttribute("setting", setting);
-        model.addAttribute("typeName", typeName);
         return "admin/setting/settingDetail";
     }
 

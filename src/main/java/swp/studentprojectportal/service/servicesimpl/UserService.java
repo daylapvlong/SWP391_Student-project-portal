@@ -75,6 +75,28 @@ public class UserService implements IUserService {
             return userRepository.findUserByFullNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrPhoneContainsIgnoreCase(search, search, search, pageable).getContent();
         }
     }
+
+    /*
+     * pageNo is the index of page, start from 0
+     * pageSize is the number of items in a page
+     * search is the search term for searching name, email, phone
+     * roleId is the role id of user
+     * status is the status of user where 1 is active, 0 is inactive and -1 is all
+     */
+
+    public List<User> getUser(Integer pageNo, Integer pageSize, String search, Integer roleId, Integer status) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        if(status != -1 && roleId != -1) {
+            return userRepository.searchUsersAndFilterByRoleIdAndStatus(search, roleId, status, pageable).getContent();
+        } else if(status != -1) {
+            return userRepository.searchUsersAndFilterByStatus(search, status, pageable).getContent();
+        } else
+        if(roleId != -1){
+            return userRepository.searchUsersAndFilterByRole(search, roleId, pageable).getContent();
+        } else {
+            return userRepository.findUserByFullNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrPhoneContainsIgnoreCase(search, search, search, pageable).getContent();
+        }
+    }
     @Override
     public List<User> findAllUser() {
         return userRepository.findAll();
@@ -115,6 +137,19 @@ public class UserService implements IUserService {
         userData.setStatus(status);
         userData.setNote(note);
 
+        userRepository.save(userData);
+        return true;
+    }
+
+    @Override
+    public boolean updateStudent(int id, boolean status, String note) {
+        Optional<User> user = userRepository.findById(id);
+
+        if(user.isEmpty()) return false;
+
+        User userData = user.get();
+        userData.setStatus(status);
+        userData.setNote(note);
         userRepository.save(userData);
         return true;
     }
@@ -203,6 +238,23 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public int getTotalPage(int pageSize, int roleId) {
+        long count = userRepository.countAllBySettingId(roleId);
+        int totalPage = count % pageSize == 0 ? (int) (count / pageSize) : (int) (count / pageSize) + 1;
+        return totalPage;
+    }
+
+    @Override
+    public List<User> findTeacherBySubjectManagerId(int subjectManagerId) {
+        return userRepository.findTeacherBySubjectManagerId(subjectManagerId);
+    }
+
+    @Override
+    public List<User> findTeacherByRoleIdAndStatus(Integer roleId, Boolean status) {
+        return userRepository.findTeacherBySettingIdAndStatus(roleId, status);
+    }
+
+    @Override
     public User resetPasswordByToken(String token) {
         User user = userRepository.findUserByToken(token);
         if(user != null) {
@@ -223,4 +275,25 @@ public class UserService implements IUserService {
         userName = userName.replace(" ", "").replace("+84", "0");
         return userRepository.findUserByEmailOrPhone(userName, userName);
     }
+
+    @Override
+    public List<User> findAllProjectMentor() {
+        return userRepository.findAllBySettingIdOrSettingId(3,4);
+    }
+
+    @Override
+    public User getUserById(int id) {
+        return userRepository.getById(id);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
+    @Override
+    public User findByPhone(String phone) {
+        return userRepository.findUserByPhone(phone);
+    }
+
 }
