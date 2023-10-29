@@ -26,17 +26,16 @@ Student Project Portal is a web application that allows students to create, mana
 * Student Management
 * Project Management (including functions such as managing submission, evaluation and GitLab synchronization for better managing)
 * Chat system between users
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-#### Built With
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+## Built With
+<div align="center">
+	<code><img width="50" src="https://user-images.githubusercontent.com/25181517/192158954-f88b5814-d510-4564-b285-dff7d6400dad.png" alt="HTML" title="HTML"/></code>
+	<code><img width="50" src="https://user-images.githubusercontent.com/25181517/183898674-75a4a1b1-f960-4ea9-abcb-637170a00a75.png" alt="CSS" title="CSS"/></code>
+	<code><img width="50" src="https://user-images.githubusercontent.com/25181517/183898054-b3d693d4-dafb-4808-a509-bab54cf5de34.png" alt="Bootstrap" title="Bootstrap"/></code>
+	<code><img width="50" src="https://user-images.githubusercontent.com/25181517/117447155-6a868a00-af3d-11eb-9cfe-245df15c9f3f.png" alt="JavaScript" title="JavaScript"/></code>
+	<code><img width="50" src="https://user-images.githubusercontent.com/25181517/183891303-41f257f8-6b3d-487c-aa56-c497b880d0fb.png" alt="Spring Boot" title="Spring Boot"/></code>
+	<code><img width="50" src="https://user-images.githubusercontent.com/25181517/183896128-ec99105a-ec1a-4d85-b08b-1aa1620b2046.png" alt="MySQL" title="MySQL"/></code>
+</div>
 
 ## Requirements
 
@@ -45,7 +44,7 @@ For building and running the application you need:
 - [JDK 1.8 or above](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [Maven 3](https://maven.apache.org)
 - [MySQL](https://www.mysql.com/)
-- 
+  
 ## Installation
 1. Clone repository
 ```
@@ -55,13 +54,18 @@ git remote add origin [https://github.com/daylapvlong/SWP391_Student-project-por
 2. Run database file (sql/database.sql)
 3. Run the project
 
-
 ## Credits
-
 * @ngominhduc24
 * @andhuc
 * @maidung1602
 
 ## Contact
+<p align="left">
+  <a href="https://www.linkedin.com/in/pham-long-1b3591257/"><img alt="Linkedin" title="Long Pham Linkedin" src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"></a>
+  <a href="mailto:phmvtlong@gmail.com"><img alt="Gmail" title="Long Pham Gmail" src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"></a>
+  <a href="https://github.com/daylapvlong"><img alt="Github" title="Long Pham Github" src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a>
+  <a href="https://www.facebook.com/profile.php?id=100012864726826"><img alt="Facebook" title="Long Pham FB" src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white"></a>
+  <a href="https://www.instagram.com/_.longpham._/"><img alt="Instagram" title="JLong Pham Instagram" src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white"></a>
+</p>
 
 
