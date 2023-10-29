@@ -13,7 +13,6 @@ import swp.studentprojectportal.service.servicesimpl.SettingService;
 import swp.studentprojectportal.service.servicesimpl.UserService;
 import swp.studentprojectportal.utils.GooglePojo;
 import swp.studentprojectportal.utils.GoogleUtils;
-import swp.studentprojectportal.utils.Validate;
 
 import java.io.IOException;
 
@@ -42,6 +41,11 @@ public class LoginController {
             Model model, HttpSession session, HttpServletResponse response, WebRequest request) {
         username = username.replace("+84", "0").replace(" ", "");
         model.addAttribute("cuser", username);
+        model.addAttribute("cpass", password);
+        if(username.length()>35){
+            model.addAttribute("errmsg", "Your username is too long");
+            return "authentication/login";
+        }
         User user = userService.findUserByUsernameAndPassword(username.trim(), password);
         if(user != null && user.isActive() && user.isStatus()) {
             session.setAttribute("user", user);
