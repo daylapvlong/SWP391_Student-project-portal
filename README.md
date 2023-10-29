@@ -55,9 +55,10 @@ git remote add origin [https://github.com/daylapvlong/SWP391_Student-project-por
 3. Run the project
 
 ## Credits
-* @ngominhduc24
-* @andhuc
-* @maidung1602
+* ngominhduc24(https://github.com/ngominhduc24)
+* andhuc(https://github.com/andhuc)
+* maidung1602(https://github.com/maidung1602)
+* nhatnguyenthanh00(https://github.com/nhatnguyenthanh00)
 
 ## Contact
 <p align="left">
