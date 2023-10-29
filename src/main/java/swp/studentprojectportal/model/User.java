@@ -47,6 +47,9 @@ public class User {
     @Column(name = "token")
     private String token;
 
+    @Column(name = "personal_token_gitlab")
+    private String personalTokenGitlab;
+
     @Column(name = "active")
     private boolean active = false;
 
@@ -62,7 +65,7 @@ public class User {
     @Column(name = "update_at")
     private Timestamp updateAt = Timestamp.valueOf(LocalDateTime.now());
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private Setting setting;
 
