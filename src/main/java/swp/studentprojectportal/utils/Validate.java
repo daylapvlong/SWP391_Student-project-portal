@@ -1,19 +1,10 @@
 package swp.studentprojectportal.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import swp.studentprojectportal.model.Subject;
-import swp.studentprojectportal.model.User;
-import swp.studentprojectportal.service.servicesimpl.SubjectSevice;
-import swp.studentprojectportal.service.servicesimpl.UserService;
-
 public class Validate {
     /*
      * Function to validate email
      * Email must contain @ and .
      */
-    static SubjectSevice subjectService;
-    static UserService userService;
-
     public static boolean validEmail(String email) {
         if(email == null) return false;
         if(email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) return true;
@@ -30,56 +21,43 @@ public class Validate {
         phoneNumber = phoneNumber.replace("+84", "0");
        // if(phoneNumber.matches("(0[3|5|7|8|9])+([0-9]{8})\\b")) return true;
         if(phoneNumber.matches("(0[0-9])+([0-9]{8})\\b")) return true;
-       // if(phoneNumber.matches("(0[3|5|7|8|9])+([0-9]{8})\\b")) return true;
-        if(phoneNumber.matches("(0[0-9])+([0-9]{8})\\b")) return true;
         return false;
     }
 
-
-
-    public static String checkValidateSubject(String subjectName, String subjectCode) {
-        if(subjectName.isEmpty()) return "Please input subject name";
-        if(subjectCode.isEmpty()) return "Please input subject code";
-
-        if(subjectService.checkSubjectNameExist(subjectName)) return "Subject name already exist";
-        if(subjectService.checkSubjectCodeExist(subjectCode)) return "Subject code already exist";
-
-        return null;
+    /*
+     * Function to validate password
+     * Password must contain at least 8 characters, including at least 1 uppercase letter, 1 lowercase letter, and 1 number
+     */
+    public static boolean validPassword(String password) {
+        if(password == null) return false;
+        if(
+                password.matches(".*[A-Z].*") &&
+                password.matches(".*[a-z].*") &&
+                password.matches(".*[0-9].*") &&
+                password.length() >= 8
+        ) {
+            return true;
+        }
+        return false;
     }
 
-    public static String checkValidateUpdateSubject(String subjectName, String subjectCode, int subjectManagerId, Subject subject) {
-        if(subjectName.isEmpty()) return "Please input subject name";
-        if(subjectCode.isEmpty()) return "Please input subject code";
-        if(subjectManagerId == 0) return "Please input subject manager";
+    public static  boolean validFullname(String fullname){
+        if (fullname == null || fullname.isEmpty()) {
+            return false;
+        }
 
-        if(!subject.getSubjectName().equals(subjectName) && subjectService.checkSubjectNameExist(subjectName)) return "Subject name already exist";
-        if(!subject.getSubjectCode().equals(subjectCode) && subjectService.checkSubjectCodeExist(subjectCode)) return "Subject code already exist";
+        // Kiểm tra xem chuỗi fullname có ít nhất 2 từ
+        String[] words = fullname.split("\\s+");
+        if (words.length < 2) {
+            return false;
+        }
 
-        return null;
-    }
+        // Kiểm tra xem chuỗi fullname có chứa số hay không
+        if(fullname.matches(".*[0-9].*")) return false;
 
-    public static String checkValidateUser(String email, String phone) {
-        if (email.isEmpty() && phone.isEmpty()) return "Please input email or phone number";
-        if (!email.isEmpty() && !userService.checkEmailDomain(email)) return "Invalid email domain";
+        // Kiểm tra xem chuỗi fullname có chứa ký tự đặc biệt hay không
+        if(fullname.matches(".*[!@#$%^&*()_+=|<>?{}\\[\\]~-].*")) return false;
 
-        if (!email.isEmpty() && !Validate.validEmail(email)) return "Invalid email";
-        if (!phone.isEmpty() && !Validate.validPhoneNumber(phone)) return "Invalid phone number";
-
-        if (!email.isEmpty() && userService.checkExistMail(email)) return "Email existed!";
-        if (!phone.isEmpty() && userService.checkExistPhoneNumber(phone)) return "Phone number existed!";
-
-        return null;
-    }
-
-    public static String checkValidateUpdateUser(String email, String phone, User user) {
-        if (!email.isEmpty() && !userService.checkEmailDomain(email)) return "Invalid email domain";
-
-        if (!email.isEmpty() && !Validate.validEmail(email)) return "Invalid email";
-        if (!phone.isEmpty() && !Validate.validPhoneNumber(phone)) return "Invalid phone number";
-
-        if (!email.equals(user.getEmail()) && !email.isEmpty() && userService.checkExistMail(email)) return "Email existed!";
-        if (!phone.equals(user.getPhone()) && !phone.isEmpty() && userService.checkExistPhoneNumber(phone)) return "Phone number existed!";
-
-        return null;
+        return true;
     }
 }

@@ -13,6 +13,7 @@ import swp.studentprojectportal.service.servicesimpl.SettingService;
 import swp.studentprojectportal.service.servicesimpl.UserService;
 import swp.studentprojectportal.utils.GooglePojo;
 import swp.studentprojectportal.utils.GoogleUtils;
+import swp.studentprojectportal.utils.Validate;
 
 import java.io.IOException;
 
@@ -39,25 +40,28 @@ public class LoginController {
     @PostMapping("/login")
     public String userLogin(@RequestParam String username, @RequestParam String password,
             Model model, HttpSession session, HttpServletResponse response, WebRequest request) {
-        String remember = request.getParameter("remember");
-        Cookie cu= new Cookie("cuser", username);
-        Cookie cp= new Cookie("cpass", password);
-        Cookie cr= new Cookie("crem", remember);
-        userService.setCookie(cu,cp,cr,remember);
-        response.addCookie(cu);
-        response.addCookie(cp);
-        response.addCookie(cr);
+        username = username.replace("+84", "0").replace(" ", "");
         model.addAttribute("cuser", username);
-        model.addAttribute("cpass", password);
-        model.addAttribute("crem", remember);
-        User user = userService.findUserByUsernameAndPassword(username, password);
+        User user = userService.findUserByUsernameAndPassword(username.trim(), password);
         if(user != null && user.isActive() && user.isStatus()) {
             session.setAttribute("user", user);
+            //add to cookie
+            String remember = request.getParameter("remember");
+            Cookie cu= new Cookie("cuser", username);
+            Cookie cp= new Cookie("cpass", password);
+            Cookie cr= new Cookie("crem", remember);
+            userService.setCookie(cu,cp,cr,remember);
+            response.addCookie(cu);
+            response.addCookie(cp);
+            response.addCookie(cr);
             return "redirect:" + afterLoginRoute;
         } else if (user==null){
             model.addAttribute("errmsg", "Username or password is not correct");
         } else if(!user.isActive()) {
             model.addAttribute("errmsg", "Your account has not been verified");
+            session.setAttribute("userauthen", user);
+            session.setAttribute("href", "verify");
+            return "redirect:/verifypage";
         } else if(!user.isStatus()) {
             model.addAttribute("errmsg", "Your account has been blocked");
         }

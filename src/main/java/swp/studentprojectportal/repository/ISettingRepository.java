@@ -9,10 +9,8 @@ import java.util.List;
 @Repository
 public interface ISettingRepository extends JpaRepository<Setting, Integer> {
     Setting findSettingByTypeIdAndSettingTitle(Integer typeId, String settingTitle);
-
-    List<Setting> findSettingByTypeId(Integer typeId);
-
     List<Setting> findSettingByTypeIdOrderByDisplayOrder(Integer typeId);
     Setting findBySettingTitle(String settingTitle);
     Setting findByTypeIdAndDisplayOrder(int typeId, int displayOrder);
+    Setting findTop1SettingByTypeIdOrderByDisplayOrderDesc(int typeId);
 }
