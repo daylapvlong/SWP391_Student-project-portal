@@ -7,13 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.request.WebRequest;
 import swp.studentprojectportal.model.User;
 import swp.studentprojectportal.service.servicesimpl.EmailService;
 import swp.studentprojectportal.service.servicesimpl.RegisterService;
 import swp.studentprojectportal.service.servicesimpl.SettingService;
 import swp.studentprojectportal.service.servicesimpl.UserService;
-import swp.studentprojectportal.utils.InstanceThread;
 import swp.studentprojectportal.utils.Utility;
 
 @Controller
@@ -28,7 +26,7 @@ public class VerifyController {
     RegisterService registerService;
 
     @GetMapping("/verifypage")
-    public String verifyPage(Model model, HttpSession session, WebRequest webRequest) {
+    public String verifyPage(Model model, HttpSession session) {
         User user = (User) session.getAttribute("userauthen");
         String token = RandomString.make(30); // genarate token
 
