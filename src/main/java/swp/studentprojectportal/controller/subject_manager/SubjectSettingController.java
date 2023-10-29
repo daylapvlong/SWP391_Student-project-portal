@@ -30,14 +30,8 @@ public class SubjectSettingController {
     public String settingPage(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         List<Subject> subjectList = subjectService.findAllSubjectByUser(user);
-        List<SubjectSetting> subjectSettingList= new ArrayList<>();
-        for (Subject subject : subjectList) {
-            List<SubjectSetting> complexityList = subjectSettingService.findSubjectSettingBySubjectAndTypeIdOrderByDisplayOrder(subject,1);
-            subjectSettingList.addAll(complexityList);
-            List<SubjectSetting> qualityList = subjectSettingService.findSubjectSettingBySubjectAndTypeIdOrderByDisplayOrder(subject,2);
-            subjectSettingList.addAll(qualityList);
-        }
-        if(subjectSettingList!=null)
+        List<SubjectSetting> subjectSettingList= subjectSettingService.findSubjectSettingByManager(user.getId());
+        if(subjectSettingList!=null && !subjectSettingList.isEmpty())
             model.addAttribute("subjectSettingList", subjectSettingList);
         else
             model.addAttribute("error", "You currently do not manage any subjects.");
@@ -46,28 +40,14 @@ public class SubjectSettingController {
     }
 
     @PostMapping("/subject-manager/subject-setting")
-    public String searchPage(@RequestParam int subjectId, Model model, HttpSession session) {
+    public String searchPage(@RequestParam int subjectId, @RequestParam int typeId, @RequestParam int status, Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         List<Subject> subjectList = subjectService.findAllSubjectByUser(user);
-        List<SubjectSetting> subjectSettingList= new ArrayList<>();
-        if (subjectId==-1) {
-            for (Subject subject : subjectList) {
-                List<SubjectSetting> complexityList = subjectSettingService.findSubjectSettingBySubjectAndTypeIdOrderByDisplayOrder(subject, 1);
-                subjectSettingList.addAll(complexityList);
-                List<SubjectSetting> qualityList = subjectSettingService.findSubjectSettingBySubjectAndTypeIdOrderByDisplayOrder(subject, 2);
-                subjectSettingList.addAll(qualityList);
-            }
-        } else {
-            Subject subject = subjectService.getSubjectById(subjectId);
-            List<SubjectSetting> complexityList = subjectSettingService.findSubjectSettingBySubjectAndTypeIdOrderByDisplayOrder(subject, 1);
-            subjectSettingList.addAll(complexityList);
-            List<SubjectSetting> qualityList = subjectSettingService.findSubjectSettingBySubjectAndTypeIdOrderByDisplayOrder(subject, 2);
-            subjectSettingList.addAll(qualityList);
-        }
-        if(subjectSettingList!=null)
-            model.addAttribute("subjectSettingList", subjectSettingList);
-        else
-            model.addAttribute("error", "You currently do not manage any subjects.");
+        List<SubjectSetting> subjectSettingList= subjectSettingService.filterSubjectSettingBySubjectAndTypeAndStatus(user.getId(), subjectId, typeId, status);
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("typeId", typeId);
+        model.addAttribute("status", status);
+        model.addAttribute("subjectSettingList", subjectSettingList);
         model.addAttribute("subjectList",subjectList);
         return "subject_manager/subject_setting/subjectSettingList";
     }
@@ -98,7 +78,17 @@ public class SubjectSettingController {
             @RequestParam Integer typeId,
             @RequestParam String settingTitle,
             @RequestParam Integer displayOrder,
-            WebRequest request) {
+            WebRequest request,Model model,HttpSession session) {
+
+//        if(settingTitle.trim().isEmpty()){
+//            model.addAttribute("errmsg","Title not empty!");
+//            User user = (User) session.getAttribute("user");
+//            List<Subject> subjectList = subjectService.findAllSubjectByUser(user);
+//            SubjectSetting subjectSetting = subjectSettingService.findById(id);
+//            model.addAttribute("setting",subjectSetting);
+//            model.addAttribute("subjectList",subjectList);
+//            return "subjectSettingDetail";
+//        }
         String status = request.getParameter("status");
         SubjectSetting subjectSetting = new SubjectSetting();
         subjectSetting.setId(id);
